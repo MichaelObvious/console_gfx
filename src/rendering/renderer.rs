@@ -57,8 +57,8 @@ impl Renderer {
             x if x >= 0 => c_x <= x2,
             _           => c_x >= x2
         } && match y1 as isize - y2 as isize {
-            y if y >= 0 => c_y >= y2,
-            _           => c_y <= y2
+            y if y >= 0 => c_y <= y2,
+            _           => c_y >= y2
         };
 
         while curr_x <= self.width && curr_y <= self.height && line_cond(curr_x, curr_y) {
