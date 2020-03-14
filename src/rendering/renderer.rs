@@ -53,8 +53,6 @@ impl Renderer {
         let mut curr_x = match x1 { x if x > self.width  => self.width,  x => x };
         let mut curr_y = match y1 { y if y > self.height => self.height, y => y };
 
-        print!("{} {}", x1, x2);
-
         let line_cond = |c_x, c_y| match x1 as isize - x2 as isize {
             x if x >= 0 => c_x >= x2,
             _           => c_x <= x2
