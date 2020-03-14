@@ -32,7 +32,7 @@ impl Renderer {
         for command in self.commands.iter() {
             match command {
                 RenderCommand::Clear             => self.clear_bg(),
-                RenderCommand::End               => { Self::clear_reset();  }
+                RenderCommand::End               => Self::clear_reset(),
                 RenderCommand::DrawChar(x, y, c) => self.draw_char(*x, *y, *c, false),
                 RenderCommand::SetColour(c)      => Self::set_colour(false, *c),
                 RenderCommand::SetBackground(c)  => Self::set_colour(true, *c),
