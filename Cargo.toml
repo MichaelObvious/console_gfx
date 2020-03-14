@@ -1,0 +1,7 @@
+[package]
+name = "console_gfx"
+version = "0.1.0"
+authors = ["MichaelObvious <michael.obviouss@gmail.com>"]
+edition = "2018"
+
+[dependencies]
