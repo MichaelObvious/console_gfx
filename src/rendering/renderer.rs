@@ -25,6 +25,10 @@ impl Renderer {
         Renderer { width: size.0, height: size.1, commands: Vec::new() }
     }
 
+    pub fn push_cmds(&mut self, mut commands: Vec<RenderCommand>) {
+        self.commands.append(&mut commands);
+    }
+
     pub fn push_cmd(&mut self, command: RenderCommand) {
         self.commands.push(command);
     }
