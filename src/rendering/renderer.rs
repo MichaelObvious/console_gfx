@@ -3,7 +3,7 @@ use super::colour::Colour;
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 #[allow(dead_code)]
 pub enum RenderCommand {
-    Clear,
+    Clear(Colour),
     End,
     SetColour(Colour),
     SetBackground(Colour),
@@ -31,8 +31,8 @@ impl Renderer {
     pub fn update(&mut self) {
         for command in self.commands.iter() {
             match command {
-                RenderCommand::Clear             => self.clear_bg(),
-                RenderCommand::End               => Self::clear_reset(),
+                RenderCommand::Clear(c)          => self.clear_bg(),
+                RenderCommand::End               => Self::clear(),
                 RenderCommand::DrawChar(x, y, c) => self.draw_char(*x, *y, *c, false),
                 RenderCommand::SetColour(c)      => Self::set_colour(false, *c),
                 RenderCommand::SetBackground(c)  => Self::set_colour(true, *c),
@@ -82,8 +82,9 @@ impl Renderer {
         print!("\x1b[{};2;{};{};{}m", ansi, c.r, c.g, c.b);
     }
 
-    fn clear_bg(&self) {
+    fn clear_bg(&self, c: Colour) {
         Self::clear();
+        Self::set_colour(true, c);
         for x in 0..self.width + 2 {
             for y in 0..self.height + 2 {
                 self.draw_char(x, y, ' ', true);
@@ -91,12 +92,8 @@ impl Renderer {
         }
     }
 
-    fn clear_reset() {
-        Self::clear();
-        print!("\x1b[0m");
-    }
-
     fn clear() {
+        print!("\x1b[0m");
         print!("\x1b[2J");
         print!("\x1b[{};{}H", 0, 0);
         print!(" ");
