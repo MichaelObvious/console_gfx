@@ -31,7 +31,7 @@ impl Renderer {
     pub fn update(&mut self) {
         for command in self.commands.iter() {
             match command {
-                RenderCommand::Clear(c)          => self.clear_bg(c),
+                RenderCommand::Clear(c)          => self.clear_bg(*c),
                 RenderCommand::End               => Self::clear(),
                 RenderCommand::DrawChar(x, y, c) => self.draw_char(*x, *y, *c, false),
                 RenderCommand::SetColour(c)      => Self::set_colour(false, *c),
