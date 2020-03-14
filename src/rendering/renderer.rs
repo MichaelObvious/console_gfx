@@ -53,7 +53,15 @@ impl Renderer {
         let mut curr_x = match x1 { x if x > self.width  => self.width,  x => x };
         let mut curr_y = match y1 { y if y > self.height => self.height, y => y };
 
-        while curr_x <= self.width && curr_y <= self.height {
+        let line_cond = |c_x, c_y| match x1 as isize - x2 as isize {
+            x if x >= 0 => c_x <= x2,
+            _           => c_x >= x2
+        } && match y1 as isize - y2 as isize {
+            y if y >= 0 => c_y <= y2,
+            _           => c_y >= y2
+        };
+
+        while curr_x <= self.width && curr_y <= self.height && line_cond(curr_x, curr_y) {
                 let cond;
                 if a_pos {
                     cond = counter as f64 >= a;
@@ -102,7 +110,7 @@ impl Renderer {
             y2 = y + 1;
         } else {
             x2 = (x % (self.width  + 1)) + 2;
-            y2 = (y % (self.height + 1)) + 2;
+            y2 = (y % (self.height + 1)) + 1;
         }
         print!("\x1b[{};{}H", y2, x2);
     }
