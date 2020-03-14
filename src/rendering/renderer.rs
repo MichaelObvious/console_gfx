@@ -9,6 +9,7 @@ pub enum RenderCommand {
     SetBackground(Colour),
     DrawChar(usize, usize, char),
 
+    DrawLine(usize, usize, usize, usize, char),
     DrawBorder(char),
 }
 
@@ -31,17 +32,50 @@ impl Renderer {
     pub fn update(&mut self) {
         for command in self.commands.iter() {
             match command {
-                RenderCommand::Clear(c)          => self.clear_bg(*c),
-                RenderCommand::End               => Self::clear(),
-                RenderCommand::DrawChar(x, y, c) => self.draw_char(*x, *y, *c, false),
-                RenderCommand::SetColour(c)      => Self::set_colour(false, *c),
-                RenderCommand::SetBackground(c)  => Self::set_colour(true, *c),
+                RenderCommand::Clear(c)                    => self.clear_bg(*c),
+                RenderCommand::End                         => Self::clear(),
+                RenderCommand::DrawChar(x, y, c)           => self.draw_char(*x, *y, *c, false),
+                RenderCommand::SetColour(c)                => Self::set_colour(false, *c),
+                RenderCommand::SetBackground(c)            => Self::set_colour(true, *c),
 
-                RenderCommand::DrawBorder(c)     => self.draw_border(*c),
+                RenderCommand::DrawBorder(c)               => self.draw_border(*c),
+                RenderCommand::DrawLine(x1, y1, x2, y2, c) => self.draw_line(*x1, *y1, *x2, *y2, *c),
             }
         }
 
         self.commands.clear();
+    }
+
+    fn draw_line(&self, x1: usize, y1: usize, x2: usize, y2: usize, c: char) {
+        let a =  (y1 + y2) as f64 / (x1 + x2) as f64;
+        let a_pos = a >= 0.0;
+        let mut counter = 0;
+        let mut curr_x = match x1 { x if x > self.width  => self.width,  x => x };
+        let mut curr_y = match y1 { y if y > self.height => self.height, y => y };
+
+        while curr_x <= self.width && curr_y <= self.height {
+                let cond;
+                if a_pos {
+                    cond = counter as f64 >= a;
+                } else {
+                    cond = counter as f64 <= a;
+                }
+
+                if cond {
+                    curr_x += 1;
+                    counter = 0;
+                }
+
+                self.draw_char(curr_x, curr_y, c, false);
+                curr_y += 1;
+
+                if a_pos {
+                    counter += 1;
+                } else {
+                    counter -= 1;
+                }
+                
+            }
     }
 
     fn draw_border(&self, c: char) {
