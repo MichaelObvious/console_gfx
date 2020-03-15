@@ -103,7 +103,7 @@ impl Renderer {
             x2 = x + 1;
             y2 = y + 1;
         } else {
-            x2 = (x % self.width)  + 1;
+            x2 = (x % self.width)  + 2;
             y2 = (y % self.height) + 2;
         }
         print!("\x1b[{};{}H", y2, x2);
