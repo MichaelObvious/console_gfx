@@ -1,10 +1,13 @@
 use super::colour::Colour;
 
+use std::io::prelude::*;                                                           
+use std::io;
+
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 #[allow(dead_code)]
 pub enum RenderCommand {
     Clear(Colour),
-    End,
+    Reset,
     SetColour(Colour),
     SetBackground(Colour),
     DrawChar(usize, usize, char),
@@ -14,8 +17,8 @@ pub enum RenderCommand {
 }
 
 pub struct Renderer {
-    width:    usize,
-    height:   usize,
+    pub width:    usize,
+    pub height:   usize,
     commands: Vec<RenderCommand>,
 }
 
@@ -37,7 +40,7 @@ impl Renderer {
         for command in self.commands.iter() {
             match command {
                 RenderCommand::Clear(c)                    => self.clear_bg(*c),
-                RenderCommand::End                         => Self::clear(),
+                RenderCommand::Reset                       => Self::clear(),
                 RenderCommand::DrawChar(x, y, c)           => self.draw_char(*x, *y, *c, false),
                 RenderCommand::SetColour(c)                => Self::set_colour(false, *c),
                 RenderCommand::SetBackground(c)            => Self::set_colour(true, *c),
@@ -95,6 +98,7 @@ impl Renderer {
     fn draw_char(&self, x: usize, y: usize, c: char, real: bool) {
         self.set_position(x, y, real);
         print!("{}", c);
+        io::stdout().flush().ok().expect("Could not flush stdout");
     }
 
     fn set_position(&self, x: usize, y: usize, real: bool) {
