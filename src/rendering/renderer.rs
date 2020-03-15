@@ -83,7 +83,7 @@ impl Renderer {
     fn draw_border(&self, c: char) {
         for x in 0..self.width + 1 {
             self.draw_char(x, 0, c, true);
-            self.draw_char(x, self.height + 2, c, true);
+            self.draw_char(x, self.height + 1, c, true);
         }
 
         for y in 0..self.height + 2 {
