@@ -81,14 +81,14 @@ impl Renderer {
     }
 
     fn draw_border(&self, c: char) {
-        for x in 0..self.width + 2 {
+        for x in 0..self.width + 1 {
             self.draw_char(x, 0, c, true);
             self.draw_char(x, self.height + 2, c, true);
         }
 
-        for y in 0..self.height + 3 {
+        for y in 0..self.height + 2 {
             self.draw_char(0, y, c, true);
-            self.draw_char(self.width + 2, y, c, true);
+            self.draw_char(self.width + 1, y, c, true);
         }
     }
 
@@ -103,8 +103,8 @@ impl Renderer {
             x2 = x + 1;
             y2 = y + 1;
         } else {
-            x2 = (x % (self.width  + 1)) + 2;
-            y2 = (y % (self.height + 1)) + 1;
+            x2 = (x % self.width)  + 1;
+            y2 = (y % self.height) + 2;
         }
         print!("\x1b[{};{}H", y2, x2);
     }
@@ -136,3 +136,25 @@ impl Renderer {
     }
 
 }
+
+#
+PS D:\code\Rust\ecosystem> ^C               #
+PS D:\code\Rust\ecosystem>                  #
+#        @@                                 #
+#          @@                               #
+#            @@                             #
+#              @@@                          #
+#                 @@                        #
+#                   @@                      #
+#                     @@                    #
+#                       @@                  #
+#                         @@                #
+#                           @@@             #
+#                              @@           #
+#                                @@         #
+#                                  @@       #
+#                                    @@     #
+#                                      @@   #
+#                                        @@ #
+#                                          @#
+#                                           #
