@@ -25,7 +25,10 @@ pub struct Renderer {
 impl Renderer {
 
     pub fn new(size: (usize, usize)) -> Renderer {
-        Renderer { width: size.0, height: size.1, commands: Vec::new() }
+        let mut r = Renderer { width: size.0, height: size.1, commands: Vec::new() };
+        r.push_cmd(RenderCommand::Reset);
+        r.update();
+        r
     }
 
     pub fn push_cmds(&mut self, mut commands: Vec<RenderCommand>) {
