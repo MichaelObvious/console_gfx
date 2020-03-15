@@ -51,7 +51,9 @@ impl Renderer {
     }
 
     fn draw_line(&self, x1: usize, y1: usize, x2: usize, y2: usize, c: char) {
-        let a =  (y1 + y2) as f64 / (x1 + x2) as f64;
+        let delta_x = x1 as isize - x2 as isize;
+        let delta_y = y1 as isize - y2 as isize;
+        let a =  delta_y as f64 / delta_x as f64;
         let a_pos = a >= 0.0;
         let mut counter = 0;
         let mut curr_x = match x1 { x if x > self.width  => self.width,  x => x };
@@ -74,12 +76,20 @@ impl Renderer {
                 }
 
                 if cond {
-                    curr_x += 1;
+                    if delta_x <= 0 {
+                        curr_x += 1;
+                    } else {
+                        curr_x -= 1;
+                    }
                     counter = 0;
                 }
 
                 self.draw_char(curr_x, curr_y, c, false);
-                curr_y += 1;
+                if delta_y <= 0 {
+                    curr_y += 1;
+                } else {
+                    curr_y -= 1;
+                }
 
                 if a_pos {
                     counter += 1;
