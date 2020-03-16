@@ -3,7 +3,7 @@ use super::colour::Colour;
 use std::io::prelude::*;                                                           
 use std::io;
 
-#[derive(Debug, Clone, Copy, Eq, PartialEq)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 #[allow(dead_code)]
 pub enum RenderCommand {
     Clear(Colour),
@@ -13,6 +13,7 @@ pub enum RenderCommand {
     DrawChar(usize, usize, char),
 
     DrawLine(usize, usize, usize, usize, char),
+    DrawString(usize, usize, String),
     DrawBorder(char),
 }
 
@@ -50,10 +51,24 @@ impl Renderer {
 
                 RenderCommand::DrawBorder(c)               => self.draw_border(*c),
                 RenderCommand::DrawLine(x1, y1, x2, y2, c) => self.draw_line(*x1, *y1, *x2, *y2, *c),
+                RenderCommand::DrawString(x, y, s)         => self.draw_string(*x, *y, s), 
             }
         }
 
         self.commands.clear();
+    }
+
+    fn draw_string(&self, x_: usize, y_: usize, s: &String) {
+        let first_x = x_;
+        let mut x = x_;
+        let mut y = y_;
+        for c in s.chars() {
+            match c {
+                '\n' => { y += 1; x = first_x; },
+                _    => self.draw_char(x, y, c, false),
+            }
+            x += 1;
+        }
     }
 
     fn draw_line(&self, x1_: usize, y1_: usize, x2_: usize, y2_: usize, c: char) {
