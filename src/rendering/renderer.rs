@@ -45,13 +45,13 @@ impl Renderer {
             match command {
                 RenderCommand::Clear(c)                    => self.clear_bg(*c),
                 RenderCommand::Reset                       => Self::clear(),
-                RenderCommand::DrawChar(x, y, c)           => self.draw_char(*x, *y, *c, false),
+                RenderCommand::DrawChar(x, y, c)           => { self.draw_char(*x, *y, *c, false); Self::flush() },
                 RenderCommand::SetColour(c)                => Self::set_colour(false, *c),
                 RenderCommand::SetBackground(c)            => Self::set_colour(true, *c),
 
-                RenderCommand::DrawBorder(c)               => self.draw_border(*c),
-                RenderCommand::DrawLine(x1, y1, x2, y2, c) => self.draw_line(*x1, *y1, *x2, *y2, *c),
-                RenderCommand::DrawString(x, y, s)         => self.draw_string(*x, *y, s), 
+                RenderCommand::DrawBorder(c)               => { self.draw_border(*c); Self::flush() },
+                RenderCommand::DrawLine(x1, y1, x2, y2, c) => { self.draw_line(*x1, *y1, *x2, *y2, *c); Self::flush() },
+                RenderCommand::DrawString(x, y, s)         => { self.draw_string(*x, *y, s); Self::flush() }, 
             }
         }
 
@@ -116,7 +116,6 @@ impl Renderer {
     fn draw_char(&self, x: usize, y: usize, c: char, real: bool) {
         self.set_position(x, y, real);
         print!("{}", c);
-        io::stdout().flush().ok().expect("Could not flush stdout");
     }
 
     fn set_position(&self, x: usize, y: usize, real: bool) {
@@ -148,6 +147,10 @@ impl Renderer {
                 self.draw_char(x, y, ' ', true);
             }
         }
+    }
+
+    fn flush() {
+        io::stdout().flush().ok().expect("Could not flush stdout");
     }
 
     fn clear() {
